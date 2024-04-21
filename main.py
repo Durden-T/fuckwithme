@@ -45,7 +45,7 @@ async def handle_new_message(event):
         await client.send_message(event.chat_id, msg)
         await asyncio.sleep(3)
 
-    # db[event.chat_id] = event.stringify()
+    db[event.chat_id] = event.stringify()
 
 
 async def check_time():
