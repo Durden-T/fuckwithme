@@ -76,8 +76,8 @@ async def send_random_message_to_groups():
                 else:
                     last = 0
             if group_id in admin_ids or now > last:
-                resp = await client.send_message(group_id, message)
-                logger.info(f'send {resp.stringify()} to {group_id}')
+                await client.send_message(group_id, message)
+                logger.info(f'send {message} to {group_id}')
                 db[group_id] = now + random.randint(3*3600,5*3600)
 
         await random_delay(600, 1200)
