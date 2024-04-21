@@ -62,8 +62,9 @@ async def send_random_message_to_groups():
 
     while True:
         await check_time()
-
         message = random.choice(group_msgs)
+
+        logger.info('start send group')
         for group_id in groups:
             #await random_delay(300, 600)
             await asyncio.sleep(0,1)
