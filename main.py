@@ -27,7 +27,7 @@ client.start(phone=config['phone'])
 
 @client.on(events.NewMessage(incoming=True))
 async def handle_new_message(event):
-    if not event.is_private or (event.sender is not None and event.sender.bot):
+    if not event.is_private:
         return
     logger.info(event)
     if event.chat_id not in admin_ids and db[event.chat_id]:
