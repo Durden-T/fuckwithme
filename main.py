@@ -65,6 +65,7 @@ async def send_random_message_to_groups():
         message = random.choice(group_msgs)
 
         logger.info('start send group')
+        now = 0
         for group_id in groups:
             if group_id not in admin_ids:
                 await random_delay(300, 600)
