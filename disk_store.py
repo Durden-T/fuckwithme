@@ -100,7 +100,7 @@ class DiskStorage:
         #     default string mode)
         self.file: typing.BinaryIO = open(file_name, "a+b")
 
-    def set(self, key: str, value: str) -> None:
+    def set(self, key, value) -> None:
         """
         set stores the key and value on the disk
 
@@ -123,7 +123,7 @@ class DiskStorage:
         # update last write position, so that next record can be written from this point
         self.write_position += sz
 
-    def get(self, key: str) -> str:
+    def get(self, key) -> str:
         """
         get retrieves the value from the disk and returns. If the key does not exist
         then it returns an empty string
