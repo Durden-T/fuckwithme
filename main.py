@@ -21,15 +21,16 @@ name_list = json.loads(config.get( 'name_list', fallback='{}'))
 db = disk_store.DiskStorage(file_name=config['session'] + '.db')
 api_id = config['api_id']
 api_hash = config['api_hash']
+admin_ids = json.loads(config['admin_chat_id'])
 client = TelegramClient(config['session'], api_id, api_hash)
 client.start(phone=config['phone'])
 
 @client.on(events.NewMessage(incoming=True))
 async def handle_new_message(event):
-    if not event.is_private or event.sender.bot:
+    if not event.is_private or (event.sender is not None and event.sender.bot):
         return
     logger.info(event)
-    if db[event.chat_id]:
+    if event.chat_id not in admin_ids and db[event.chat_id]:
         logger.info(f'event has been replied: {event.chat_id}')
         return
 
@@ -57,7 +58,7 @@ async def random_delay(min=0, max=1):
 
 
 async def send_random_message_to_groups():
-    if len(groups) == 0:
+    if len(groups) == 0 or len(group_msgs) == 0:
         return
 
     while True:
