@@ -26,7 +26,7 @@ client.start(phone=config['phone'])
 
 @client.on(events.NewMessage(incoming=True))
 async def handle_new_message(event):
-    if not event.is_private:
+    if not event.is_private or event.sender.bot:
         return
     logger.info(event)
     if db[event.chat_id]:
@@ -72,12 +72,12 @@ async def send_random_message_to_groups():
                 last = float(last)
             else:
                 last = 0
-            if  now > last:
+            if now > last:
                 await client.send_message(group_id, message)
                 logger.info(f'send {message} to {group_id}')
                 db[group_id] = now + random.randint(3*3600,5*3600)
 
-        await random_delay(600, 1200)
+        await random_delay(150, 300)
 
 
 async def periodic_change_profile():
@@ -101,14 +101,27 @@ async def periodic_change_profile():
 async def main():
     me = await client.get_me()
     logger.info(me.stringify())
+
     async for dialog in client.iter_dialogs():
         print(dialog.name, 'has ID', dialog.id)
+
+    if config.getboolean('clean'):
+        for dialog in await client.get_dialogs():
+            if not dialog.is_channel and not dialog.is_group:
+                continue
+            if dialog.id not in groups:
+                logger.info(f'leave dialog {dialog.name}')
+                await client.delete_dialog(dialog)
+
     await client.run_until_disconnected()
+
+
+
 
 
 with client:
     client.loop.run_until_complete(asyncio.gather(
         main(),
-        send_random_message_to_groups(),
-        periodic_change_profile()
+        #send_random_message_to_groups(),
+        #periodic_change_profile()
     ))
