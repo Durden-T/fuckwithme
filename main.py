@@ -10,8 +10,12 @@ from telethon.tl.functions.account import UpdateProfileRequest
 from telethon.tl.functions.photos import DeletePhotosRequest, UploadProfilePhotoRequest
 import disk_store
 import configparser
+
+random.seed(datetime.datetime.now().timestamp())
+
 logger.remove()
 logger.add(sys.stdout)
+
 
 config = configparser.ConfigParser()
 config.read('config.ini')
