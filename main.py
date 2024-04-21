@@ -1,33 +1,28 @@
 import asyncio
 import datetime
 import json
-import os
 import random
-import dotenv
 from loguru import logger
 from telethon import TelegramClient, events
 from telethon.tl.functions.account import UpdateProfileRequest
 from telethon.tl.functions.photos import DeletePhotosRequest, UploadProfilePhotoRequest
-
 import disk_store
+import configparser
 
-dotenv.load_dotenv()
+config = configparser.ConfigParser()
+config.read('config.ini')
 
-replys = json.loads(os.getenv('replys'))
-
-groups = json.loads(os.getenv('groups', '{}'))
-group_msgs = json.loads(os.getenv('group_msgs', '{}'))
-
-avatar_paths = json.loads(os.getenv('avatar_paths', '{}'))
-name_list = json.loads(os.getenv('name_list', '{}'))
-
-db = disk_store.DiskStorage(file_name=os.getenv('session') + '.db')
-
-api_id = os.getenv('api_id')
-api_hash = os.getenv('api_hash')
-client = TelegramClient(os.getenv('session'), api_id, api_hash)
-client.start(phone=os.getenv('phone'))
-
+config = config[config['DEFAULT']['session']]
+replys = json.loads(config['replys'])
+groups = json.loads(config['groups'])
+group_msgs = json.loads(config['group_msgs'])
+avatar_paths = json.loads(config.get( 'avatar_paths', fallback='{}'))
+name_list = json.loads(config.get( 'name_list', fallback='{}'))
+db = disk_store.DiskStorage(file_name=config['session'] + '.db')
+api_id = config['api_id']
+api_hash = config['api_hash']
+client = TelegramClient(config['session'], api_id, api_hash)
+client.start(phone=config['phone'])
 
 @client.on(events.NewMessage(incoming=True))
 async def handle_new_message(event):
