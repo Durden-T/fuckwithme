@@ -34,6 +34,8 @@ async def handle_new_message(event):
         logger.info(f'event has been replied: {event.chat_id}')
         return
 
+    db[event.chat_id] = event.stringify()
+
     await check_time()
     if event.chat_id not in admin_ids:
         await random_delay()
@@ -41,7 +43,6 @@ async def handle_new_message(event):
         await client.send_message(event.chat_id, msg)
         await asyncio.sleep(3)
 
-    db[event.chat_id] = event.stringify()
 
 
 async def check_time():
