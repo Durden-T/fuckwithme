@@ -71,8 +71,6 @@ async def send_random_message_to_groups():
 
     while True:
         await check_time()
-        message = random.choice(group_msgs)
-
         logger.info('start send group')
         now = 0
         for group_id in groups:
@@ -84,6 +82,7 @@ async def send_random_message_to_groups():
                 else:
                     last = 0
             if group_id in admin_ids or now > last:
+                message = random.choice(group_msgs)
                 await client.send_message(group_id, message)
                 logger.info(f'send {message} to {group_id}')
                 db[group_id] = now + random.randint(3*3600,5*3600)
