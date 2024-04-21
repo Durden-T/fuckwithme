@@ -65,7 +65,8 @@ async def send_random_message_to_groups():
 
         message = random.choice(group_msgs)
         for group_id in groups:
-            await random_delay(300, 600)
+            #await random_delay(300, 600)
+            await asyncio.sleep(0,1)
             now = datetime.datetime.now().timestamp()
             last = db[group_id]
             if last != '':
