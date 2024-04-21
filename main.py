@@ -2,12 +2,16 @@ import asyncio
 import datetime
 import json
 import random
+import sys
+
 from loguru import logger
 from telethon import TelegramClient, events
 from telethon.tl.functions.account import UpdateProfileRequest
 from telethon.tl.functions.photos import DeletePhotosRequest, UploadProfilePhotoRequest
 import disk_store
 import configparser
+logger.remove()
+logger.add(sys.stdout)
 
 config = configparser.ConfigParser()
 config.read('config.ini')
