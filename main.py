@@ -29,14 +29,14 @@ client.start(phone=config['phone'])
 async def handle_new_message(event):
     if not event.is_private:
         return
-    logger.info(event)
+    logger.info(f'received private msg: {event.message.message}')
     if event.chat_id not in admin_ids and db[event.chat_id]:
         logger.info(f'event has been replied: {event.chat_id}')
         return
 
     await check_time()
-
-    await random_delay()
+    if event.chat_id not in admin_ids:
+        await random_delay()
     for msg in random.choice(replys):
         await client.send_message(event.chat_id, msg)
         await asyncio.sleep(3)
@@ -52,8 +52,7 @@ async def check_time():
         await asyncio.sleep(sleep_seconds)
 
 
-async def random_delay(min=0, max=1):
-    # async def random_delay(min=120, max=600):
+async def random_delay(min=900, max=1800):
     await asyncio.sleep(random.randint(min, max))
 
 
@@ -66,7 +65,7 @@ async def send_random_message_to_groups():
 
         message = random.choice(group_msgs)
         for group_id in groups:
-            await random_delay()
+            await random_delay(300, 600)
             now = datetime.datetime.now().timestamp()
             last = db[group_id]
             if last != '':
@@ -74,11 +73,11 @@ async def send_random_message_to_groups():
             else:
                 last = 0
             if now > last:
-                await client.send_message(group_id, message)
-                logger.info(f'send {message} to {group_id}')
+                resp = await client.send_message(group_id, message)
+                logger.info(f'send {resp.stringify()} to {group_id}')
                 db[group_id] = now + random.randint(3*3600,5*3600)
 
-        await random_delay(150, 300)
+        await random_delay(600, 1200)
 
 
 async def periodic_change_profile():
