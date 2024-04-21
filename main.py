@@ -55,7 +55,7 @@ async def handle_new_message(event):
 
 async def check_time():
     now = datetime.datetime.now()
-    if not (8 <= now.hour <= 24):
+    if not (8 <= now.hour < 24):
         next = (now + datetime.timedelta(days=1)).replace(hour=8, minute=0, second=0, microsecond=0)
         sleep_seconds = (next - now).total_seconds()
         await asyncio.sleep(sleep_seconds)
