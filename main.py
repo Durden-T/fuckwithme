@@ -101,9 +101,6 @@ async def periodic_change_profile():
 
 
 async def main():
-    me = await client.get_me()
-    logger.info(me.stringify())
-
     async for dialog in client.iter_dialogs():
         print(dialog.name, 'has ID', dialog.id)
 
@@ -124,6 +121,6 @@ async def main():
 with client:
     client.loop.run_until_complete(asyncio.gather(
         main(),
-        #send_random_message_to_groups(),
+        send_random_message_to_groups(),
         #periodic_change_profile()
     ))
