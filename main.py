@@ -66,15 +66,15 @@ async def send_random_message_to_groups():
 
         logger.info('start send group')
         for group_id in groups:
-            #await random_delay(300, 600)
-            await asyncio.sleep(0,1)
-            now = datetime.datetime.now().timestamp()
-            last = db[group_id]
-            if last != '':
-                last = float(last)
-            else:
-                last = 0
-            if now > last:
+            if group_id not in admin_ids:
+                await random_delay(300, 600)
+                now = datetime.datetime.now().timestamp()
+                last = db[group_id]
+                if last != '':
+                    last = float(last)
+                else:
+                    last = 0
+            if group_id in admin_ids or now > last:
                 resp = await client.send_message(group_id, message)
                 logger.info(f'send {resp.stringify()} to {group_id}')
                 db[group_id] = now + random.randint(3*3600,5*3600)
